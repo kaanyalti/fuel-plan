@@ -156,7 +156,7 @@
     <div class="sev card">
       <div class="row"><span class="lab">Weight-loss pace</span><span class="word" id="sevWord">Moderate</span></div>
       <input type="range" id="sev" min="0" max="100" value="50">
-      <div class="ends"><span>Gentle</span><span>Aggressive</span></div>
+      <div class="ends"><span>Maintain</span><span>Aggressive</span></div>
       <div class="meta">~<b id="sevDef">500</b> kcal/day deficit</div>
     </div>
     <div class="stats">
@@ -288,10 +288,10 @@
   /* ---- people ---- */
   const PEOPLE = {
     kaan: { who:"Kaan", sub:"Cut · stay full on volume",
-      maint:2900, p:180, f:75, defMin:250, defMax:1000, defStart:500,
+      maint:2900, p:180, f:75, defMin:0, defMax:1000, defStart:500,
       note:"Maintenance ~2900 kcal (BMR 2128 × light activity). At this pace you eat <b>__KCAL__ kcal</b> (~__DEF__/day deficit). High protein + fiber + water-volume food <b>kills snacking</b>. Day = 1 breakfast + 2 mains, rotate freely." },
     wife: { who:"Adriana", sub:"Cut · high protein, fresh food",
-      maint:1900, p:120, f:50, defMin:150, defMax:500, defStart:400,
+      maint:1900, p:120, f:50, defMin:0, defMax:500, defStart:400,
       note:"Maintenance ~1900 kcal (BMR 1413 × light activity). At this pace you eat <b>__KCAL__ kcal</b> (~__DEF__/day deficit). Protein stays high (120g) to hold muscle + stay full near a healthy weight. Yogurt/milk/aged cheese swapped for fresh mozzarella everywhere." }
   };
 
@@ -320,8 +320,8 @@
     document.getElementById("t-p").textContent = d.p+"g";
     document.getElementById("t-f").textContent = d.f+"g";
     document.getElementById("t-c").textContent = carbs+"g";
-    document.getElementById("t-proj").textContent = "≈ "+kg.toFixed(2).replace(/0$/,"")+" kg / week ("+lb.toFixed(1)+" lb)";
-    document.getElementById("sevWord").textContent = pct<33?"Gentle":pct<67?"Moderate":"Aggressive";
+    document.getElementById("t-proj").textContent = def===0 ? "Hold weight (maintenance)" : "≈ "+kg.toFixed(2).replace(/0$/,"")+" kg / week ("+lb.toFixed(1)+" lb)";
+    document.getElementById("sevWord").textContent = def===0?"Maintain":pct<33?"Gentle":pct<67?"Moderate":"Aggressive";
     document.getElementById("sevDef").textContent = def+" kcal";
     document.getElementById("t-note").innerHTML = d.note.replace("__KCAL__",kcal).replace("__DEF__",def+" kcal");
     localStorage.setItem("fuel-def-"+person, def);
