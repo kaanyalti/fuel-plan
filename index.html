@@ -78,12 +78,14 @@
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; appearance:none; width:28px; height:28px; border-radius:50%; background:var(--card); border:3px solid var(--acc); box-shadow:0 2px 6px rgba(20,30,50,.18); cursor:pointer}
   input[type=range]::-moz-range-thumb{width:28px; height:28px; border-radius:50%; background:var(--card); border:3px solid var(--acc); cursor:pointer}
   .sev .ends{display:flex; justify-content:space-between; font-size:.72rem; color:var(--mut); margin-top:5px}
-  .actlist{display:flex; flex-direction:column; gap:7px}
-  .actlist button{display:flex; flex-direction:column; align-items:flex-start; gap:2px; text-align:left; width:100%; background:var(--soft); border:1px solid var(--line); color:var(--txt); padding:11px 13px; border-radius:10px; cursor:pointer; font:inherit}
-  .actlist button .nm{font-weight:700; font-size:.92rem}
-  .actlist button .ex{font-size:.76rem; color:var(--mut)}
-  .actlist button.on{border-color:var(--acc); background:color-mix(in srgb,var(--acc) 10%,transparent)}
-  .actlist button.on .nm{color:var(--acc)}
+  .actcard{padding:13px 15px}
+  .actcard .lab{font-size:.74rem; font-weight:700; color:var(--mut); text-transform:uppercase; letter-spacing:.6px}
+  .caro{display:flex; align-items:center; gap:10px; margin-top:7px}
+  .caro-btn{flex:0 0 auto; width:42px; height:46px; border-radius:10px; border:1px solid var(--line); background:var(--soft); color:var(--txt); font-size:1.5rem; line-height:1; cursor:pointer}
+  .caro-btn:disabled{opacity:.28; cursor:default}
+  .caro-mid{flex:1; text-align:center; min-width:0}
+  .caro-mid .nm{font-weight:800; font-size:1rem; color:var(--acc)}
+  .caro-mid .ex{font-size:.76rem; color:var(--mut); margin-top:1px}
   .sev .meta{font-size:.85rem; color:var(--mut); margin-top:10px; text-align:center}
   .sev .meta b{color:var(--txt)}
   .meal h3{font-size:1.05rem; margin-bottom:4px}
@@ -159,10 +161,16 @@
 
   <section id="targets">
     <h2><span class="dot"></span>Daily Targets</h2>
-    <div class="sev card">
-      <div class="row"><span class="lab">Activity level</span><span class="word" id="actWord">Light</span></div>
-      <div class="actlist" id="actList"></div>
-      <div class="meta" id="actEx"></div>
+    <div class="sev card actcard">
+      <div class="lab">Activity level</div>
+      <div class="caro">
+        <button class="caro-btn" id="actPrev" aria-label="Less active">‹</button>
+        <div class="caro-mid">
+          <div class="nm" id="actWord">Light</div>
+          <div class="ex" id="actEx"></div>
+        </div>
+        <button class="caro-btn" id="actNext" aria-label="More active">›</button>
+      </div>
     </div>
     <div class="sev card">
       <div class="row"><span class="lab">Weight-loss pace</span><span class="word" id="sevWord">Moderate</span></div>
@@ -325,11 +333,12 @@
 
   /* ---- person ---- */
   const who = document.getElementById("who"), sub = document.getElementById("sub");
-  const slider = document.getElementById("sev"), actList = document.getElementById("actList");
+  const slider = document.getElementById("sev");
+  const actPrev = document.getElementById("actPrev"), actNext = document.getElementById("actNext");
   let person = "kaan", actIdx = 1;
 
-  actList.innerHTML = ACT.map((a,i)=>`<button data-i="${i}"><span class="nm">${a.name}</span><span class="ex">${a.ex}</span></button>`).join("");
-  actList.querySelectorAll("button").forEach(b=> b.onclick = ()=>{ actIdx = +b.dataset.i; render(); });
+  actPrev.onclick = ()=>{ if(actIdx>0){ actIdx--; render(); } };
+  actNext.onclick = ()=>{ if(actIdx<ACT.length-1){ actIdx++; render(); } };
 
   function render(){
     const d = PEOPLE[person], pct = +slider.value;
@@ -340,8 +349,8 @@
     const carbs = Math.max(0, Math.round((kcal - d.p*4 - d.f*9)/4));
     const kg = def/1100, lb = kg*2.2046;
     document.getElementById("actWord").textContent = act.name;
-    document.getElementById("actEx").innerHTML = "Maintenance <b>"+maint+" kcal</b> (BMR × "+act.m+")";
-    actList.querySelectorAll("button").forEach((b,i)=> b.classList.toggle("on", i===actIdx));
+    document.getElementById("actEx").innerHTML = act.ex+" · maint <b>"+maint+"</b>";
+    actPrev.disabled = actIdx===0; actNext.disabled = actIdx===ACT.length-1;
     document.getElementById("t-kcal").textContent = kcal;
     document.getElementById("t-p").textContent = d.p+"g";
     document.getElementById("t-f").textContent = d.f+"g";
