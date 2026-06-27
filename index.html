@@ -78,6 +78,12 @@
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; appearance:none; width:28px; height:28px; border-radius:50%; background:var(--card); border:3px solid var(--acc); box-shadow:0 2px 6px rgba(20,30,50,.18); cursor:pointer}
   input[type=range]::-moz-range-thumb{width:28px; height:28px; border-radius:50%; background:var(--card); border:3px solid var(--acc); cursor:pointer}
   .sev .ends{display:flex; justify-content:space-between; font-size:.72rem; color:var(--mut); margin-top:5px}
+  .actlist{display:flex; flex-direction:column; gap:7px}
+  .actlist button{display:flex; flex-direction:column; align-items:flex-start; gap:2px; text-align:left; width:100%; background:var(--soft); border:1px solid var(--line); color:var(--txt); padding:11px 13px; border-radius:10px; cursor:pointer; font:inherit}
+  .actlist button .nm{font-weight:700; font-size:.92rem}
+  .actlist button .ex{font-size:.76rem; color:var(--mut)}
+  .actlist button.on{border-color:var(--acc); background:color-mix(in srgb,var(--acc) 10%,transparent)}
+  .actlist button.on .nm{color:var(--acc)}
   .sev .meta{font-size:.85rem; color:var(--mut); margin-top:10px; text-align:center}
   .sev .meta b{color:var(--txt)}
   .meal h3{font-size:1.05rem; margin-bottom:4px}
@@ -155,9 +161,8 @@
     <h2><span class="dot"></span>Daily Targets</h2>
     <div class="sev card">
       <div class="row"><span class="lab">Activity level</span><span class="word" id="actWord">Light</span></div>
-      <input type="range" id="act" min="0" max="4" step="1" value="1">
-      <div class="ends"><span>Sedentary</span><span>Very active</span></div>
-      <div class="meta" id="actEx">light exercise 1–3 days/week</div>
+      <div class="actlist" id="actList"></div>
+      <div class="meta" id="actEx"></div>
     </div>
     <div class="sev card">
       <div class="row"><span class="lab">Weight-loss pace</span><span class="word" id="sevWord">Moderate</span></div>
@@ -320,19 +325,23 @@
 
   /* ---- person ---- */
   const who = document.getElementById("who"), sub = document.getElementById("sub");
-  const slider = document.getElementById("sev"), actSlider = document.getElementById("act");
-  let person = "kaan";
+  const slider = document.getElementById("sev"), actList = document.getElementById("actList");
+  let person = "kaan", actIdx = 1;
+
+  actList.innerHTML = ACT.map((a,i)=>`<button data-i="${i}"><span class="nm">${a.name}</span><span class="ex">${a.ex}</span></button>`).join("");
+  actList.querySelectorAll("button").forEach(b=> b.onclick = ()=>{ actIdx = +b.dataset.i; render(); });
 
   function render(){
     const d = PEOPLE[person], pct = +slider.value;
-    const act = ACT[+actSlider.value];
+    const act = ACT[actIdx];
     const maint = Math.round(d.bmr*act.m/25)*25;
     const def  = Math.round((d.defMin + (d.defMax-d.defMin)*pct/100)/25)*25;
     const kcal = Math.round((maint-def)/25)*25;
     const carbs = Math.max(0, Math.round((kcal - d.p*4 - d.f*9)/4));
     const kg = def/1100, lb = kg*2.2046;
     document.getElementById("actWord").textContent = act.name;
-    document.getElementById("actEx").innerHTML = act.ex + " · maintenance <b>"+maint+" kcal</b>";
+    document.getElementById("actEx").innerHTML = "Maintenance <b>"+maint+" kcal</b> (BMR × "+act.m+")";
+    actList.querySelectorAll("button").forEach((b,i)=> b.classList.toggle("on", i===actIdx));
     document.getElementById("t-kcal").textContent = kcal;
     document.getElementById("t-p").textContent = d.p+"g";
     document.getElementById("t-f").textContent = d.f+"g";
@@ -342,7 +351,7 @@
     document.getElementById("sevDef").textContent = def+" kcal below maintenance";
     document.getElementById("t-note").innerHTML = d.note.replace("__MAINT__",maint).replace("__ACT__",act.name.toLowerCase()).replace("__KCAL__",kcal).replace("__DEF__",def+" kcal");
     localStorage.setItem("fuel-def-"+person, def);
-    localStorage.setItem("fuel-act-"+person, actSlider.value);
+    localStorage.setItem("fuel-act-"+person, actIdx);
   }
   function setPerson(p){
     if(!PEOPLE[p]) p="kaan";
@@ -352,7 +361,7 @@
     who.textContent = d.who; sub.textContent = d.sub;
     document.querySelectorAll("#person button").forEach(b=> b.classList.toggle("on", b.dataset.p===p));
     const savedAct = parseInt(localStorage.getItem("fuel-act-"+p));
-    actSlider.value = (savedAct>=0 && savedAct<=4) ? savedAct : d.actStart;
+    actIdx = (savedAct>=0 && savedAct<=4) ? savedAct : d.actStart;
     const saved = parseFloat(localStorage.getItem("fuel-def-"+p));
     const def = (saved>=d.defMin && saved<=d.defMax) ? saved : d.defStart;
     slider.value = Math.round((def-d.defMin)/(d.defMax-d.defMin)*100);
@@ -360,7 +369,6 @@
     render();
   }
   slider.addEventListener("input", render);
-  actSlider.addEventListener("input", render);
   document.querySelectorAll("#person button").forEach(b=> b.onclick = ()=> setPerson(b.dataset.p));
   setPerson(localStorage.getItem("fuel-person") || "kaan");
 
