@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fuel — Cut Plan</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#171a21; --line:#262b36;
+    --txt:#e7e9ee; --mut:#9aa3b2; --acc:#5eead4; --acc2:#fbbf24;
+    --good:#4ade80;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--txt);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; padding-bottom:60px;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:24px 18px}
+  header{text-align:center; padding:36px 0 20px}
+  header h1{font-size:2.3rem; letter-spacing:-.5px; font-weight:800}
+  header h1 span{color:var(--acc)}
+  header p{color:var(--mut); margin-top:6px}
+  nav{
+    position:sticky; top:0; z-index:5; background:rgba(15,17,21,.85);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+    display:flex; gap:6px; overflow-x:auto; padding:10px 14px; scrollbar-width:none;
+  }
+  nav::-webkit-scrollbar{display:none}
+  nav a{
+    color:var(--mut); text-decoration:none; font-size:.82rem; font-weight:600;
+    white-space:nowrap; padding:5px 11px; border-radius:99px; border:1px solid transparent;
+  }
+  nav a:hover{color:var(--txt); border-color:var(--line)}
+  section{margin:30px 0}
+  h2{font-size:1.25rem; margin-bottom:14px; display:flex; align-items:center; gap:9px}
+  h2 .dot{width:8px;height:8px;border-radius:99px;background:var(--acc)}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px}
+  .card + .card{margin-top:12px}
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:12px}
+  .stat{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px; text-align:center}
+  .stat .n{font-size:1.9rem; font-weight:800; color:var(--acc)}
+  .stat .n.p{color:var(--acc2)}
+  .stat .l{font-size:.78rem; color:var(--mut); text-transform:uppercase; letter-spacing:.5px; margin-top:2px}
+  .meal h3{font-size:1.05rem; margin-bottom:4px}
+  .meal .kc{font-size:.8rem; font-weight:700; color:var(--acc2); background:rgba(251,191,36,.1); padding:2px 9px; border-radius:99px; display:inline-block; margin-bottom:8px}
+  .meal ul{list-style:none}
+  .meal li{padding:3px 0 3px 18px; position:relative; color:var(--mut)}
+  .meal li::before{content:"›"; position:absolute; left:2px; color:var(--acc)}
+  .meal li b{color:var(--txt); font-weight:600}
+  .tag{font-size:.72rem; font-weight:600; color:var(--mut); border:1px solid var(--line); border-radius:99px; padding:2px 8px; margin-left:6px}
+  /* shopping */
+  .shop label{
+    display:flex; align-items:center; gap:11px; padding:9px 4px; cursor:pointer;
+    border-bottom:1px solid var(--line); user-select:none;
+  }
+  .shop label:last-child{border-bottom:none}
+  .shop input{appearance:none; width:21px; height:21px; flex:0 0 21px; border:2px solid var(--mut); border-radius:6px; cursor:pointer; position:relative; transition:.15s}
+  .shop input:checked{background:var(--good); border-color:var(--good)}
+  .shop input:checked::after{content:"✓"; color:#0f1115; font-weight:900; font-size:14px; position:absolute; top:-1px; left:3px}
+  .shop input:checked + span{text-decoration:line-through; color:var(--mut)}
+  .shop .grp{font-size:.78rem; font-weight:700; color:var(--acc); text-transform:uppercase; letter-spacing:.6px; margin:14px 0 2px}
+  .shop .grp:first-child{margin-top:0}
+  #clear{margin-top:14px; background:transparent; border:1px solid var(--line); color:var(--mut); padding:8px 14px; border-radius:9px; font-size:.82rem; cursor:pointer}
+  #clear:hover{color:var(--txt); border-color:var(--mut)}
+  .note{color:var(--mut); font-size:.9rem}
+  .note b{color:var(--txt)}
+  .pill{display:inline-block; background:rgba(94,234,212,.1); color:var(--acc); font-size:.8rem; font-weight:600; padding:3px 10px; border-radius:99px; margin:3px 4px 3px 0}
+  footer{text-align:center; color:var(--mut); font-size:.8rem; margin-top:40px; padding-top:20px; border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#targets">Targets</a>
+  <a href="#breakfast">Breakfasts</a>
+  <a href="#mains">Mains</a>
+  <a href="#shop">Shopping</a>
+  <a href="#prep">Prep</a>
+  <a href="#snacks">Snacks</a>
+  <a href="#supps">Supplements</a>
+  <a href="#tune">Tuning</a>
+</nav>
+
+<div class="wrap">
+  <header>
+    <h1>Food as <span>Fuel</span></h1>
+    <p>Simple cut plan · ~0.7–0.9 kg/week · volume to stay full</p>
+  </header>
+
+  <section id="targets">
+    <h2><span class="dot"></span>Daily Targets</h2>
+    <div class="stats">
+      <div class="stat"><div class="n">2000</div><div class="l">kcal</div></div>
+      <div class="stat"><div class="n p">180g</div><div class="l">Protein</div></div>
+      <div class="stat"><div class="n">70g</div><div class="l">Fat</div></div>
+      <div class="stat"><div class="n">160g</div><div class="l">Carbs</div></div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <p class="note">Maintenance ~2900 kcal (BMR 2128 × light activity). Eating 2000 = ~800 deficit.
+      High protein + fiber + water-volume food = <b>kills snacking</b>. Each day = <b>1 breakfast + 2 mains</b>, rotate freely.</p>
+    </div>
+  </section>
+
+  <section id="breakfast">
+    <h2><span class="dot"></span>Breakfasts <span class="tag">pick one</span></h2>
+    <div class="card meal">
+      <h3>A · Veg Omelette + Yogurt</h3>
+      <span class="kc">~370 kcal · 33g P</span>
+      <ul>
+        <li>3 eggs, spinach + tomato, <b>1 tsp olive oil</b> (skip butter)</li>
+        <li>150g Greek yogurt 0–2% + 100g strawberries on side</li>
+        <li>Add a scoop protein in the yogurt → <b>55g P</b></li>
+      </ul>
+    </div>
+    <div class="card meal">
+      <h3>B · Yogurt Protein Bowl <span class="tag">no cook</span></h3>
+      <span class="kc">~450 kcal · 50g P</span>
+      <ul>
+        <li>250g Greek yogurt 0–2% + 1 scoop protein powder</li>
+        <li>1 banana <i>or</i> 100g berries · optional 30g oats</li>
+        <li>Biggest morning fullness, zero effort</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="mains">
+    <h2><span class="dot"></span>Mains <span class="tag">pick two/day</span></h2>
+    <div class="card meal">
+      <h3>1 · Chicken Thigh + Rice + Big Veg</h3>
+      <span class="kc">~800 kcal · 48g P</span>
+      <ul>
+        <li>200g boneless skinless thigh, fresh in pan</li>
+        <li><b>60g dry baldo rice</b> (measured — calorie dial)</li>
+        <li>300g broccoli/carrot/zucchini · <b>1 tbsp oil total</b></li>
+        <li>Prepped garlic-yogurt or tomato sauce</li>
+      </ul>
+    </div>
+    <div class="card meal">
+      <h3>2 · Shrimp + Veg Stir-Fry</h3>
+      <span class="kc">~680 kcal · 50g P</span>
+      <ul>
+        <li>200g shrimp (4 min, no pre-cook)</li>
+        <li>400g stir-fry veg — peppers/broccoli/snap peas/onion</li>
+        <li>1 tbsp oil · prepped soy-garlic-ginger sauce · 60g rice optional</li>
+        <li>Huge volume, leanest protein</li>
+      </ul>
+    </div>
+    <div class="card meal">
+      <h3>3 · Lean Bolognese <span class="tag">sauce ahead</span></h3>
+      <span class="kc">~560 kcal · 38g P/portion</span>
+      <ul>
+        <li>Batch (5 portions): 500g 5% beef/turkey + 2 onion + 4 carrot + 300g mushroom + 2 cans crushed tomato + garlic/herbs</li>
+        <li>75g dry pasta per serve</li>
+        <li>Your favorite — fits prep-ahead perfectly</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="shop" class="shop">
+    <h2><span class="dot"></span>Shopping List <span class="tag">taps persist</span></h2>
+    <div class="card" id="list"></div>
+    <button id="clear">Reset list</button>
+  </section>
+
+  <section id="prep">
+    <h2><span class="dot"></span>Sunday Prep <span class="tag">~30 min, sauces only</span></h2>
+    <div class="card">
+      <ul class="meal" style="list-style:none">
+        <li><b>Bolognese</b> — cook full batch, fridge/freeze portions</li>
+        <li><b>Stir-fry sauce</b> jar — soy + garlic + ginger + bit honey + cornstarch</li>
+        <li><b>Chicken sauce</b> — garlic-yogurt or tomato</li>
+      </ul>
+      <p class="note" style="margin-top:10px">Proteins cooked fresh (thighs/shrimp). Only sauces go ahead.</p>
+    </div>
+  </section>
+
+  <section id="snacks">
+    <h2><span class="dot"></span>Snack Defense <span class="tag">volume = full</span></h2>
+    <div class="card">
+      <span class="pill">🍉 Watermelon — 30 kcal/100g, eat bowls</span>
+      <span class="pill">Greek yogurt + frozen berries</span>
+      <span class="pill">Frozen banana / berries (sweet fix)</span>
+      <span class="pill">Black coffee · tea · sparkling water</span>
+    </div>
+  </section>
+
+  <section id="supps">
+    <h2><span class="dot"></span>Supplements</h2>
+    <div class="card">
+      <p class="note"><b>Creatine 5g/day</b>, every day, timing irrelevant, no loading. Scale jumps +1–2kg water first 2 weeks — that's not fat, ignore it.</p>
+      <p class="note" style="margin-top:8px"><b>Protein powder</b> to bridge to 180g — breakfast + post-workout.</p>
+    </div>
+  </section>
+
+  <section id="tune">
+    <h2><span class="dot"></span>Tuning</h2>
+    <div class="card">
+      <p class="note">Weigh weekly, morning, post-bathroom. Losing &gt;1kg/wk + feeling drained → add 100g rice or a fruit. Stalled 2–3 weeks → cut a tbsp oil or 20g rice.</p>
+      <p class="note" style="margin-top:10px"><b>Real win:</b> kill pastries, swap butter → measured oil, pile on veg volume. 80% of the result right there.</p>
+    </div>
+  </section>
+
+  <footer>Built as fuel, not enjoyment — for the next few weeks. You got this. 💪</footer>
+</div>
+
+<script>
+  const items = {
+    "Protein": ["Eggs ×2 dozen","Greek yogurt 0–2% (big tub)","Protein powder","Chicken thigh (boneless skinless) ~1kg","Shrimp ~600g","Lean mince 5% (beef/turkey) 500g"],
+    "Carbs": ["Baldo rice","Pasta","Oats (small bag)"],
+    "Veg": ["Broccoli","Zucchini","Carrots","Peppers","Onions","Mushrooms","Spinach","Tomatoes","Stir-fry mix / snap peas"],
+    "Fruit": ["Watermelon","Bananas","Strawberries","Blackberries"],
+    "Pantry": ["Olive oil","Garlic","Ginger","Soy sauce","Crushed tomatoes ×2 cans","Herbs / spices","Honey","Cornstarch"],
+    "Supps": ["Creatine"]
+  };
+  const KEY = "fuel-shop-v1";
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){}
+  const list = document.getElementById("list");
+  let html = "";
+  for (const grp in items){
+    html += `<div class="grp">${grp}</div>`;
+    for (const it of items[grp]){
+      const id = "i_" + btoa(unescape(encodeURIComponent(it))).replace(/=/g,"");
+      const chk = state[id] ? "checked" : "";
+      html += `<label><input type="checkbox" data-id="${id}" ${chk}><span>${it}</span></label>`;
+    }
+  }
+  list.innerHTML = html;
+  list.addEventListener("change", e=>{
+    if(e.target.type!=="checkbox") return;
+    state[e.target.dataset.id] = e.target.checked;
+    localStorage.setItem(KEY, JSON.stringify(state));
+  });
+  document.getElementById("clear").addEventListener("click", ()=>{
+    state = {}; localStorage.removeItem(KEY);
+    list.querySelectorAll("input").forEach(c=>c.checked=false);
+  });
+</script>
+</body>
+</html>
