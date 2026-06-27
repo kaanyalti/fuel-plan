@@ -3,124 +3,185 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fuel — Cut Plan</title>
+<title>Fuel — Meal Plan</title>
 <style>
   :root{
-    --bg:#0f1115; --card:#171a21; --line:#262b36;
-    --txt:#e7e9ee; --mut:#9aa3b2; --acc:#5eead4; --acc2:#fbbf24;
-    --good:#4ade80;
+    --bg:#f5f6f8; --card:#ffffff; --line:#e6e8ee; --soft:#f0f2f6;
+    --txt:#1b1f27; --mut:#697086; --acc:#0d9488; --acc2:#c2710c; --good:#16a34a;
+    --shadow:0 1px 3px rgba(20,30,50,.06),0 1px 2px rgba(20,30,50,.04);
+  }
+  [data-theme="dark"]{
+    --bg:#0f1115; --card:#171a21; --line:#262b36; --soft:#1d212b;
+    --txt:#e7e9ee; --mut:#9aa3b2; --acc:#5eead4; --acc2:#fbbf24; --good:#4ade80;
+    --shadow:none;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{
     background:var(--bg); color:var(--txt);
     font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    -webkit-font-smoothing:antialiased; padding-bottom:60px;
+    -webkit-font-smoothing:antialiased; padding-bottom:60px; transition:background .2s,color .2s;
   }
-  .wrap{max-width:760px; margin:0 auto; padding:24px 18px}
-  header{text-align:center; padding:36px 0 20px}
-  header h1{font-size:2.3rem; letter-spacing:-.5px; font-weight:800}
+  .wrap{max-width:760px; margin:0 auto; padding:0 18px 24px}
+  .topbar{display:flex; justify-content:space-between; align-items:center; padding:14px 2px 0}
+  .brand{font-weight:800; font-size:1.05rem; letter-spacing:-.3px}
+  .brand b{color:var(--acc)}
+  #theme{background:var(--soft); border:1px solid var(--line); color:var(--txt); width:40px; height:40px; border-radius:11px; font-size:1.1rem; cursor:pointer; line-height:1}
+  header{text-align:center; padding:22px 0 10px}
+  header h1{font-size:2.1rem; letter-spacing:-.5px; font-weight:800}
   header h1 span{color:var(--acc)}
-  header p{color:var(--mut); margin-top:6px}
+  header p{color:var(--mut); margin-top:6px; font-size:.95rem}
+  /* person toggle */
+  .seg{display:flex; gap:6px; background:var(--soft); border:1px solid var(--line); border-radius:13px; padding:5px; max-width:320px; margin:14px auto 0}
+  .seg button{flex:1; background:transparent; border:none; color:var(--mut); font:600 .92rem/1 inherit; padding:11px 8px; border-radius:9px; cursor:pointer}
+  .seg button.on{background:var(--card); color:var(--txt); box-shadow:var(--shadow)}
+  [data-theme="dark"] .seg button.on{background:#2a2f3b}
+  /* servings */
+  .serv{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px; margin-top:16px; box-shadow:var(--shadow)}
+  .serv .lab{font-size:.78rem; font-weight:700; color:var(--acc); text-transform:uppercase; letter-spacing:.6px; margin-bottom:9px; display:flex; justify-content:space-between}
+  .serv .lab .mult{color:var(--acc2)}
+  .serv .presets{display:flex; gap:7px; flex-wrap:wrap}
+  .serv .presets button{flex:1; min-width:90px; background:var(--soft); border:1px solid var(--line); color:var(--txt); padding:10px 6px; border-radius:10px; font:600 .85rem inherit; cursor:pointer}
+  .serv .presets button.on{border-color:var(--acc); color:var(--acc)}
+  .serv .stepper{display:flex; align-items:center; justify-content:center; gap:16px; margin-top:11px}
+  .serv .stepper button{width:38px; height:38px; border-radius:10px; border:1px solid var(--line); background:var(--soft); color:var(--txt); font-size:1.3rem; cursor:pointer; line-height:1}
+  .serv .stepper .val{font-weight:800; font-size:1.05rem; min-width:130px; text-align:center}
+  .serv .hint{font-size:.78rem; color:var(--mut); margin-top:9px; text-align:center}
   nav{
-    position:sticky; top:0; z-index:5; background:rgba(15,17,21,.85);
-    backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
-    display:flex; gap:6px; overflow-x:auto; padding:10px 14px; scrollbar-width:none;
+    position:sticky; top:0; z-index:5; background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--line); margin-top:18px;
+    display:flex; gap:6px; overflow-x:auto; padding:10px 2px; scrollbar-width:none;
   }
   nav::-webkit-scrollbar{display:none}
-  nav a{
-    color:var(--mut); text-decoration:none; font-size:.82rem; font-weight:600;
-    white-space:nowrap; padding:5px 11px; border-radius:99px; border:1px solid transparent;
-  }
+  nav a{color:var(--mut); text-decoration:none; font-size:.82rem; font-weight:600; white-space:nowrap; padding:5px 11px; border-radius:99px; border:1px solid transparent}
   nav a:hover{color:var(--txt); border-color:var(--line)}
-  section{margin:30px 0}
-  h2{font-size:1.25rem; margin-bottom:14px; display:flex; align-items:center; gap:9px}
+  section{margin:28px 0}
+  h2{font-size:1.2rem; margin-bottom:14px; display:flex; align-items:center; gap:9px}
   h2 .dot{width:8px;height:8px;border-radius:99px;background:var(--acc)}
-  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; box-shadow:var(--shadow)}
   .card + .card{margin-top:12px}
-  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:12px}
-  .stat{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px; text-align:center}
-  .stat .n{font-size:1.9rem; font-weight:800; color:var(--acc)}
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
+  @media(max-width:520px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .stat{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:15px 8px; text-align:center; box-shadow:var(--shadow)}
+  .stat .n{font-size:1.7rem; font-weight:800; color:var(--acc)}
   .stat .n.p{color:var(--acc2)}
-  .stat .l{font-size:.78rem; color:var(--mut); text-transform:uppercase; letter-spacing:.5px; margin-top:2px}
+  .stat .l{font-size:.72rem; color:var(--mut); text-transform:uppercase; letter-spacing:.5px; margin-top:2px}
+  .proj{margin-top:12px; background:linear-gradient(120deg,var(--acc),var(--good)); border-radius:14px; padding:16px 18px; color:#04130f}
+  [data-theme="dark"] .proj{color:#04130f}
+  .proj .t{font-size:.74rem; font-weight:800; text-transform:uppercase; letter-spacing:.8px; opacity:.75}
+  .proj .v{font-size:1.35rem; font-weight:800; margin-top:2px}
   .meal h3{font-size:1.05rem; margin-bottom:4px}
-  .meal .kc{font-size:.8rem; font-weight:700; color:var(--acc2); background:rgba(251,191,36,.1); padding:2px 9px; border-radius:99px; display:inline-block; margin-bottom:8px}
+  .meal .kc{font-size:.8rem; font-weight:700; color:var(--acc2); background:color-mix(in srgb,var(--acc2) 12%,transparent); padding:2px 9px; border-radius:99px; display:inline-block; margin-bottom:8px}
   .meal ul{list-style:none}
   .meal li{padding:3px 0 3px 18px; position:relative; color:var(--mut)}
   .meal li::before{content:"›"; position:absolute; left:2px; color:var(--acc)}
   .meal li b{color:var(--txt); font-weight:600}
+  .q{font-weight:700; color:var(--txt)}
+  .swap{display:block; margin-top:8px; padding:8px 11px; background:color-mix(in srgb,var(--acc2) 10%,transparent); border-radius:9px; font-size:.85rem; color:var(--txt)}
+  .swap b{color:var(--acc2)}
   .tag{font-size:.72rem; font-weight:600; color:var(--mut); border:1px solid var(--line); border-radius:99px; padding:2px 8px; margin-left:6px}
-  /* shopping */
-  .shop label{
-    display:flex; align-items:center; gap:11px; padding:9px 4px; cursor:pointer;
-    border-bottom:1px solid var(--line); user-select:none;
-  }
+  .shop label{display:flex; align-items:center; gap:11px; padding:11px 4px; cursor:pointer; border-bottom:1px solid var(--line); user-select:none}
   .shop label:last-child{border-bottom:none}
-  .shop input{appearance:none; width:21px; height:21px; flex:0 0 21px; border:2px solid var(--mut); border-radius:6px; cursor:pointer; position:relative; transition:.15s}
+  .shop input{appearance:none; width:23px; height:23px; flex:0 0 23px; border:2px solid var(--mut); border-radius:6px; cursor:pointer; position:relative; transition:.15s}
   .shop input:checked{background:var(--good); border-color:var(--good)}
-  .shop input:checked::after{content:"✓"; color:#0f1115; font-weight:900; font-size:14px; position:absolute; top:-1px; left:3px}
+  .shop input:checked::after{content:"✓"; color:#fff; font-weight:900; font-size:15px; position:absolute; top:-1px; left:3px}
   .shop input:checked + span{text-decoration:line-through; color:var(--mut)}
   .shop .grp{font-size:.78rem; font-weight:700; color:var(--acc); text-transform:uppercase; letter-spacing:.6px; margin:14px 0 2px}
   .shop .grp:first-child{margin-top:0}
-  #clear{margin-top:14px; background:transparent; border:1px solid var(--line); color:var(--mut); padding:8px 14px; border-radius:9px; font-size:.82rem; cursor:pointer}
-  #clear:hover{color:var(--txt); border-color:var(--mut)}
+  #clear{margin-top:14px; background:transparent; border:1px solid var(--line); color:var(--mut); padding:9px 14px; border-radius:9px; font-size:.82rem; cursor:pointer}
   .note{color:var(--mut); font-size:.9rem}
   .note b{color:var(--txt)}
-  .pill{display:inline-block; background:rgba(94,234,212,.1); color:var(--acc); font-size:.8rem; font-weight:600; padding:3px 10px; border-radius:99px; margin:3px 4px 3px 0}
+  .pill{display:inline-block; background:color-mix(in srgb,var(--acc) 12%,transparent); color:var(--acc); font-size:.8rem; font-weight:600; padding:4px 11px; border-radius:99px; margin:3px 4px 3px 0}
   footer{text-align:center; color:var(--mut); font-size:.8rem; margin-top:40px; padding-top:20px; border-top:1px solid var(--line)}
+  body[data-person="kaan"] .wife-only{display:none}
+  body[data-person="wife"] .kaan-only{display:none}
 </style>
 </head>
-<body>
-
-<nav>
-  <a href="#targets">Targets</a>
-  <a href="#breakfast">Breakfasts</a>
-  <a href="#mains">Mains</a>
-  <a href="#shop">Shopping</a>
-  <a href="#prep">Prep</a>
-  <a href="#snacks">Snacks</a>
-  <a href="#supps">Supplements</a>
-  <a href="#tune">Tuning</a>
-</nav>
+<body data-person="kaan">
 
 <div class="wrap">
+  <div class="topbar">
+    <div class="brand">Food as <b>Fuel</b></div>
+    <button id="theme" aria-label="Toggle theme">🌙</button>
+  </div>
+
   <header>
-    <h1>Food as <span>Fuel</span></h1>
-    <p>Simple cut plan · ~0.7–0.9 kg/week · volume to stay full</p>
+    <h1>Hey <span id="who">Kaan</span></h1>
+    <p id="sub">Cut · stay full on volume</p>
+
+    <div class="seg" id="person">
+      <button data-p="kaan" class="on">Kaan</button>
+      <button data-p="wife">Wife</button>
+    </div>
+
+    <div class="serv">
+      <div class="lab"><span>Cooking for</span><span class="mult" id="multLbl">×1</span></div>
+      <div class="presets" id="presets">
+        <button data-s="1" class="on">Just me</button>
+        <button data-s="2">+ Wife</button>
+        <button data-s="2.5">Family (+2yo)</button>
+      </div>
+      <div class="stepper">
+        <button id="minus">−</button>
+        <div class="val"><span id="servVal">1</span> serving<span id="servS"></span></div>
+        <button id="plus">+</button>
+      </div>
+      <div class="hint">Scales ingredient amounts below. Toddler ≈ ½ serving. Your daily targets stay per-person.</div>
+    </div>
   </header>
+
+  <nav>
+    <a href="#targets">Targets</a>
+    <a href="#breakfast">Breakfasts</a>
+    <a href="#mains">Mains</a>
+    <a href="#shop">Shopping</a>
+    <a href="#prep">Prep</a>
+    <a href="#snacks">Snacks</a>
+    <a href="#supps">Supplements</a>
+    <a href="#tune">Tuning</a>
+  </nav>
 
   <section id="targets">
     <h2><span class="dot"></span>Daily Targets</h2>
     <div class="stats">
-      <div class="stat"><div class="n">2000</div><div class="l">kcal</div></div>
-      <div class="stat"><div class="n p">180g</div><div class="l">Protein</div></div>
-      <div class="stat"><div class="n">70g</div><div class="l">Fat</div></div>
-      <div class="stat"><div class="n">160g</div><div class="l">Carbs</div></div>
+      <div class="stat"><div class="n" id="t-kcal">2000</div><div class="l">kcal</div></div>
+      <div class="stat"><div class="n p" id="t-p">180g</div><div class="l">Protein</div></div>
+      <div class="stat"><div class="n" id="t-f">70g</div><div class="l">Fat</div></div>
+      <div class="stat"><div class="n" id="t-c">160g</div><div class="l">Carbs</div></div>
+    </div>
+    <div class="proj">
+      <div class="t">Projected</div>
+      <div class="v" id="t-proj">≈ 0.7–0.9 kg / week</div>
     </div>
     <div class="card" style="margin-top:12px">
-      <p class="note">Maintenance ~2900 kcal (BMR 2128 × light activity). Eating 2000 = ~800 deficit.
-      High protein + fiber + water-volume food = <b>kills snacking</b>. Each day = <b>1 breakfast + 2 mains</b>, rotate freely.</p>
+      <p class="note" id="t-note"></p>
     </div>
   </section>
 
   <section id="breakfast">
     <h2><span class="dot"></span>Breakfasts <span class="tag">pick one</span></h2>
     <div class="card meal">
-      <h3>A · Veg Omelette + Yogurt</h3>
+      <h3>A · Veg Omelette</h3>
       <span class="kc">~370 kcal · 33g P</span>
       <ul>
-        <li>3 eggs, spinach + tomato, <b>1 tsp olive oil</b> (skip butter)</li>
-        <li>150g Greek yogurt 0–2% + 100g strawberries on side</li>
-        <li>Add a scoop protein in the yogurt → <b>55g P</b></li>
+        <li><span class="q" data-base="3" data-unit="">3</span> eggs, spinach + tomato, <span class="q" data-base="1" data-unit=" tsp">1 tsp</span> olive oil (skip butter)</li>
+        <li class="kaan-only">Side: <span class="q" data-base="150" data-unit="g">150g</span> Greek yogurt 0–2% + <span class="q" data-base="100" data-unit="g">100g</span> strawberries</li>
+        <li class="wife-only">Side: <span class="q" data-base="100" data-unit="g">100g</span> fresh mozzarella + tomato + <span class="q" data-base="100" data-unit="g">100g</span> strawberries</li>
       </ul>
+      <div class="swap kaan-only">Add a scoop protein in the yogurt → <b>55g P</b></div>
+      <div class="swap wife-only"><b>No yogurt/milk:</b> mozzarella + eggs already cover protein. Want more? Blend a protein scoop with water + banana + ice.</div>
     </div>
     <div class="card meal">
-      <h3>B · Yogurt Protein Bowl <span class="tag">no cook</span></h3>
+      <h3 class="kaan-only">B · Yogurt Protein Bowl <span class="tag">no cook</span></h3>
+      <h3 class="wife-only">B · Protein Smoothie <span class="tag">no cook</span></h3>
       <span class="kc">~450 kcal · 50g P</span>
-      <ul>
-        <li>250g Greek yogurt 0–2% + 1 scoop protein powder</li>
-        <li>1 banana <i>or</i> 100g berries · optional 30g oats</li>
-        <li>Biggest morning fullness, zero effort</li>
+      <ul class="kaan-only">
+        <li><span class="q" data-base="250" data-unit="g">250g</span> Greek yogurt 0–2% + <span class="q" data-base="1" data-unit="">1</span> scoop protein</li>
+        <li><span class="q" data-base="1" data-unit="">1</span> banana <i>or</i> <span class="q" data-base="100" data-unit="g">100g</span> berries · optional <span class="q" data-base="30" data-unit="g">30g</span> oats</li>
+      </ul>
+      <ul class="wife-only">
+        <li><span class="q" data-base="1" data-unit="">1</span> scoop protein blended with water (no milk)</li>
+        <li><span class="q" data-base="1" data-unit="">1</span> banana + <span class="q" data-base="100" data-unit="g">100g</span> berries + ice · optional <span class="q" data-base="30" data-unit="g">30g</span> oats</li>
       </ul>
     </div>
   </section>
@@ -131,30 +192,30 @@
       <h3>1 · Chicken Thigh + Rice + Big Veg</h3>
       <span class="kc">~800 kcal · 48g P</span>
       <ul>
-        <li>200g boneless skinless thigh, fresh in pan</li>
-        <li><b>60g dry baldo rice</b> (measured — calorie dial)</li>
-        <li>300g broccoli/carrot/zucchini · <b>1 tbsp oil total</b></li>
-        <li>Prepped garlic-yogurt or tomato sauce</li>
+        <li><span class="q" data-base="200" data-unit="g">200g</span> boneless skinless thigh, fresh in pan</li>
+        <li><span class="q" data-base="60" data-unit="g">60g</span> dry baldo rice <b>(measured — calorie dial)</b></li>
+        <li><span class="q" data-base="300" data-unit="g">300g</span> broccoli/carrot/zucchini · <span class="q" data-base="1" data-unit=" tbsp">1 tbsp</span> oil total</li>
       </ul>
+      <div class="swap kaan-only">Sauce: prepped garlic-yogurt or tomato</div>
+      <div class="swap wife-only">Sauce: <b>tomato or olive-oil-garlic</b> (no yogurt)</div>
     </div>
     <div class="card meal">
       <h3>2 · Shrimp + Veg Stir-Fry</h3>
       <span class="kc">~680 kcal · 50g P</span>
       <ul>
-        <li>200g shrimp (4 min, no pre-cook)</li>
-        <li>400g stir-fry veg — peppers/broccoli/snap peas/onion</li>
-        <li>1 tbsp oil · prepped soy-garlic-ginger sauce · 60g rice optional</li>
-        <li>Huge volume, leanest protein</li>
+        <li><span class="q" data-base="200" data-unit="g">200g</span> shrimp (4 min, no pre-cook)</li>
+        <li><span class="q" data-base="400" data-unit="g">400g</span> stir-fry veg — peppers/broccoli/snap peas/onion</li>
+        <li><span class="q" data-base="1" data-unit=" tbsp">1 tbsp</span> oil · soy-garlic-ginger sauce · <span class="q" data-base="60" data-unit="g">60g</span> rice optional</li>
       </ul>
     </div>
     <div class="card meal">
       <h3>3 · Lean Bolognese <span class="tag">sauce ahead</span></h3>
       <span class="kc">~560 kcal · 38g P/portion</span>
       <ul>
-        <li>Batch (5 portions): 500g 5% beef/turkey + 2 onion + 4 carrot + 300g mushroom + 2 cans crushed tomato + garlic/herbs</li>
-        <li>75g dry pasta per serve</li>
-        <li>Your favorite — fits prep-ahead perfectly</li>
+        <li>Batch (5 portions): <span class="q" data-base="500" data-unit="g">500g</span> 5% beef/turkey + 2 onion + 4 carrot + <span class="q" data-base="300" data-unit="g">300g</span> mushroom + 2 cans crushed tomato</li>
+        <li><span class="q" data-base="75" data-unit="g">75g</span> dry pasta per serve</li>
       </ul>
+      <div class="swap wife-only">Top with a little <b>fresh mozzarella</b> instead of parmesan.</div>
     </div>
   </section>
 
@@ -170,7 +231,7 @@
       <ul class="meal" style="list-style:none">
         <li><b>Bolognese</b> — cook full batch, fridge/freeze portions</li>
         <li><b>Stir-fry sauce</b> jar — soy + garlic + ginger + bit honey + cornstarch</li>
-        <li><b>Chicken sauce</b> — garlic-yogurt or tomato</li>
+        <li><b>Chicken sauce</b> — tomato or garlic (yogurt version for Kaan)</li>
       </ul>
       <p class="note" style="margin-top:10px">Proteins cooked fresh (thighs/shrimp). Only sauces go ahead.</p>
     </div>
@@ -179,9 +240,10 @@
   <section id="snacks">
     <h2><span class="dot"></span>Snack Defense <span class="tag">volume = full</span></h2>
     <div class="card">
-      <span class="pill">🍉 Watermelon — 30 kcal/100g, eat bowls</span>
-      <span class="pill">Greek yogurt + frozen berries</span>
-      <span class="pill">Frozen banana / berries (sweet fix)</span>
+      <span class="pill">🍉 Watermelon — 30 kcal/100g</span>
+      <span class="pill kaan-only">Greek yogurt + frozen berries</span>
+      <span class="pill wife-only">Fresh mozzarella + tomato</span>
+      <span class="pill">Frozen banana / berries</span>
       <span class="pill">Black coffee · tea · sparkling water</span>
     </div>
   </section>
@@ -190,24 +252,89 @@
     <h2><span class="dot"></span>Supplements</h2>
     <div class="card">
       <p class="note"><b>Creatine 5g/day</b>, every day, timing irrelevant, no loading. Scale jumps +1–2kg water first 2 weeks — that's not fat, ignore it.</p>
-      <p class="note" style="margin-top:8px"><b>Protein powder</b> to bridge to 180g — breakfast + post-workout.</p>
+      <p class="note kaan-only" style="margin-top:8px"><b>Protein powder</b> to bridge to 180g — breakfast + post-workout.</p>
+      <p class="note wife-only" style="margin-top:8px"><b>Protein powder</b> (blend with water, no milk needed) to hit ~120g if a day runs short.</p>
     </div>
   </section>
 
   <section id="tune">
     <h2><span class="dot"></span>Tuning</h2>
     <div class="card">
-      <p class="note">Weigh weekly, morning, post-bathroom. Losing &gt;1kg/wk + feeling drained → add 100g rice or a fruit. Stalled 2–3 weeks → cut a tbsp oil or 20g rice.</p>
-      <p class="note" style="margin-top:10px"><b>Real win:</b> kill pastries, swap butter → measured oil, pile on veg volume. 80% of the result right there.</p>
+      <p class="note">Weigh weekly, morning, post-bathroom. <span class="kaan-only">Losing &gt;1kg/wk + feeling drained → add 100g rice or a fruit. Stalled 2–3 weeks → cut a tbsp oil or 20g rice.</span><span class="wife-only">Losing &gt;0.5kg/wk or feeling low-energy → add a fruit or 20g rice. Stalled 2–3 weeks → trim a tbsp oil. Keep it slow near a healthy weight.</span></p>
+      <p class="note" style="margin-top:10px"><b>Real win:</b> kill pastries, swap butter → measured oil, pile on veg volume.</p>
     </div>
   </section>
 
-  <footer>Built as fuel, not enjoyment — for the next few weeks. You got this. 💪</footer>
+  <footer>Built as fuel for the next few weeks. You both got this. 💪</footer>
 </div>
 
 <script>
+  /* ---- people ---- */
+  const PEOPLE = {
+    kaan: { who:"Kaan", sub:"Gentle cut · stay full on volume",
+      kcal:"2400", p:"180g", f:"75g", c:"250g",
+      proj:"≈ 0.5 kg / week",
+      note:"Maintenance ~2900 kcal (BMR 2128 × light activity). Eating 2400 = ~500 deficit → steady, sustainable loss. High protein + fiber + water-volume food <b>kills snacking</b>. Each day = 1 breakfast + 2 mains, rotate freely. (At your size a bigger deficit is safe if you want faster — drop to ~2100 for ~0.75 kg/wk.)" },
+    wife: { who:"Eda", sub:"Gentle cut · high protein, fresh food",
+      kcal:"1500", p:"120g", f:"50g", c:"140g",
+      proj:"≈ 0.3–0.4 kg / week",
+      note:"Maintenance ~1900 kcal (BMR 1413 × light activity). Eating 1500 = ~400 deficit → steady, sustainable loss. Slow is right near a healthy BMI — protein stays high (120g) to hold muscle + stay full. Skips yogurt/milk/aged cheese — fresh mozzarella subbed in everywhere." }
+  };
+
+  /* ---- theme ---- */
+  const themeBtn = document.getElementById("theme");
+  function setTheme(t){
+    document.documentElement.setAttribute("data-theme", t==="dark"?"dark":"light");
+    themeBtn.textContent = t==="dark" ? "☀️" : "🌙";
+    localStorage.setItem("fuel-theme", t);
+  }
+  setTheme(localStorage.getItem("fuel-theme") || "light");
+  themeBtn.onclick = ()=> setTheme(document.documentElement.getAttribute("data-theme")==="dark" ? "light" : "dark");
+
+  /* ---- person ---- */
+  function setPerson(p){
+    if(!PEOPLE[p]) p="kaan";
+    document.body.setAttribute("data-person", p);
+    const d = PEOPLE[p];
+    who.textContent = d.who; sub.textContent = d.sub;
+    document.getElementById("t-kcal").textContent = d.kcal;
+    document.getElementById("t-p").textContent = d.p;
+    document.getElementById("t-f").textContent = d.f;
+    document.getElementById("t-c").textContent = d.c;
+    document.getElementById("t-proj").textContent = d.proj;
+    document.getElementById("t-note").innerHTML = d.note;
+    document.querySelectorAll("#person button").forEach(b=> b.classList.toggle("on", b.dataset.p===p));
+    localStorage.setItem("fuel-person", p);
+  }
+  const who = document.getElementById("who"), sub = document.getElementById("sub");
+  document.querySelectorAll("#person button").forEach(b=> b.onclick = ()=> setPerson(b.dataset.p));
+  setPerson(localStorage.getItem("fuel-person") || "kaan");
+
+  /* ---- portion scaling ---- */
+  const qs = [...document.querySelectorAll(".q")];
+  function fmtNum(v){ return (Math.round(v*10)/10).toString().replace(/\.0$/,""); }
+  function applyServings(mult){
+    qs.forEach(s=>{
+      const base = parseFloat(s.dataset.base), unit = s.dataset.unit;
+      let v = base*mult;
+      if(unit==="g"||unit==="ml") v = Math.round(v/5)*5;
+      s.textContent = fmtNum(v) + unit;
+    });
+    document.getElementById("multLbl").textContent = "×" + fmtNum(mult);
+    document.getElementById("servVal").textContent = fmtNum(mult);
+    document.getElementById("servS").textContent = mult===1 ? "" : "s";
+    document.querySelectorAll("#presets button").forEach(b=> b.classList.toggle("on", parseFloat(b.dataset.s)===mult));
+    localStorage.setItem("fuel-serv", mult);
+  }
+  let serv = parseFloat(localStorage.getItem("fuel-serv")) || 1;
+  document.querySelectorAll("#presets button").forEach(b=> b.onclick = ()=>{ serv=parseFloat(b.dataset.s); applyServings(serv); });
+  document.getElementById("plus").onclick  = ()=>{ serv=Math.round((serv+0.5)*10)/10; applyServings(serv); };
+  document.getElementById("minus").onclick = ()=>{ serv=Math.max(0.5, Math.round((serv-0.5)*10)/10); applyServings(serv); };
+  applyServings(serv);
+
+  /* ---- shopping list ---- */
   const items = {
-    "Protein": ["Eggs ×2 dozen","Greek yogurt 0–2% (big tub)","Protein powder","Chicken thigh (boneless skinless) ~1kg","Shrimp ~600g","Lean mince 5% (beef/turkey) 500g"],
+    "Protein": ["Eggs ×2 dozen","Greek yogurt 0–2% (Kaan)","Fresh mozzarella (Eda)","Protein powder","Chicken thigh (boneless skinless) ~1kg","Shrimp ~600g","Lean mince 5% (beef/turkey) 500g"],
     "Carbs": ["Baldo rice","Pasta","Oats (small bag)"],
     "Veg": ["Broccoli","Zucchini","Carrots","Peppers","Onions","Mushrooms","Spinach","Tomatoes","Stir-fry mix / snap peas"],
     "Fruit": ["Watermelon","Bananas","Strawberries","Blackberries"],
@@ -219,12 +346,11 @@
   try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){}
   const list = document.getElementById("list");
   let html = "";
-  for (const grp in items){
+  for(const grp in items){
     html += `<div class="grp">${grp}</div>`;
-    for (const it of items[grp]){
+    for(const it of items[grp]){
       const id = "i_" + btoa(unescape(encodeURIComponent(it))).replace(/=/g,"");
-      const chk = state[id] ? "checked" : "";
-      html += `<label><input type="checkbox" data-id="${id}" ${chk}><span>${it}</span></label>`;
+      html += `<label><input type="checkbox" data-id="${id}" ${state[id]?"checked":""}><span>${it}</span></label>`;
     }
   }
   list.innerHTML = html;
@@ -233,10 +359,10 @@
     state[e.target.dataset.id] = e.target.checked;
     localStorage.setItem(KEY, JSON.stringify(state));
   });
-  document.getElementById("clear").addEventListener("click", ()=>{
-    state = {}; localStorage.removeItem(KEY);
+  document.getElementById("clear").onclick = ()=>{
+    state={}; localStorage.removeItem(KEY);
     list.querySelectorAll("input").forEach(c=>c.checked=false);
-  });
+  };
 </script>
 </body>
 </html>
