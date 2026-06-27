@@ -228,7 +228,7 @@
       <span class="kc">~800 kcal · 48g P</span>
       <ul>
         <li><span class="q" data-base="200" data-unit="g">200g</span> boneless skinless thigh, fresh in pan</li>
-        <li><span class="q" data-dial="1" data-base="60" data-unit="g">60g</span> dry baldo rice <b>(measured — calorie dial)</b></li>
+        <li>Baldo rice — <span class="q" data-dial="1" data-cook="3" data-base="60" data-unit="g">60g</span> <b>(measured — calorie dial)</b></li>
         <li><span class="q" data-base="300" data-unit="g">300g</span> broccoli/carrot/zucchini · <span class="q" data-dial="1" data-base="1" data-unit=" tbsp">1 tbsp</span> oil total</li>
       </ul>
       <div class="swap kaan-only">Sauce: prepped garlic-yogurt or tomato</div>
@@ -240,7 +240,7 @@
       <ul>
         <li><span class="q" data-base="200" data-unit="g">200g</span> shrimp (4 min, no pre-cook)</li>
         <li><span class="q" data-base="400" data-unit="g">400g</span> stir-fry veg — peppers/broccoli/snap peas/onion</li>
-        <li><span class="q" data-dial="1" data-base="1" data-unit=" tbsp">1 tbsp</span> oil · soy-garlic-ginger sauce · <span class="q" data-dial="1" data-base="60" data-unit="g">60g</span> rice optional</li>
+        <li><span class="q" data-dial="1" data-base="1" data-unit=" tbsp">1 tbsp</span> oil · soy-garlic-ginger sauce · rice <span class="q" data-dial="1" data-cook="3" data-base="60" data-unit="g">60g</span> (optional)</li>
       </ul>
     </div>
     <div class="card meal">
@@ -248,7 +248,7 @@
       <span class="kc">~560 kcal · 38g P/portion</span>
       <ul>
         <li>Batch (5 portions): <span class="q" data-base="500" data-unit="g">500g</span> 5% beef/turkey + 2 onion + 4 carrot + <span class="q" data-base="300" data-unit="g">300g</span> mushroom + 2 cans crushed tomato</li>
-        <li><span class="q" data-dial="1" data-base="75" data-unit="g">75g</span> dry pasta per serve</li>
+        <li>Pasta — <span class="q" data-dial="1" data-cook="2.4" data-base="75" data-unit="g">75g</span> per serve</li>
       </ul>
       <div class="swap wife-only">Top with a little <b>fresh mozzarella</b> instead of parmesan.</div>
     </div>
@@ -344,7 +344,13 @@
       let v = base*servMult;
       if(s.dataset.dial) v *= calFactor;          // rice/pasta/oats/oil track the eater's calories
       if(unit==="g"||unit==="ml") v = Math.round(v/5)*5;
-      s.textContent = fmtNum(Math.max(unit==="g"?5:0, v)) + unit;
+      v = Math.max(unit==="g"?5:0, v);
+      if(s.dataset.cook){                          // dry → cooked, scaled with the whole pot
+        const cooked = Math.round(v*parseFloat(s.dataset.cook)/5)*5;
+        s.textContent = fmtNum(v)+unit+" dry → ≈"+cooked+"g cooked";
+      } else {
+        s.textContent = fmtNum(v) + unit;
+      }
     });
   }
 
