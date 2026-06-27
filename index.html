@@ -144,7 +144,7 @@
         <div class="val"><span id="servVal">1</span> serving<span id="servS"></span></div>
         <button id="plus">+</button>
       </div>
-      <div class="hint">Scales ingredient amounts below. Toddler ≈ ½ serving. Your daily targets stay per-person.</div>
+      <div class="hint">Scales amounts for the table (toddler ≈ ½). Rice / pasta / oats / oil also auto-fit the selected person's daily calories; protein + veg stay fixed.</div>
     </div>
   </header>
 
@@ -199,7 +199,7 @@
       <h3>A · Veg Omelette</h3>
       <span class="kc">~370 kcal · 33g P</span>
       <ul>
-        <li><span class="q" data-base="3" data-unit="">3</span> eggs, spinach + tomato, <span class="q" data-base="1" data-unit=" tsp">1 tsp</span> olive oil (skip butter)</li>
+        <li><span class="q" data-base="3" data-unit="">3</span> eggs, spinach + tomato, <span class="q" data-dial="1" data-base="1" data-unit=" tsp">1 tsp</span> olive oil (skip butter)</li>
         <li class="kaan-only">Side: <span class="q" data-base="150" data-unit="g">150g</span> Greek yogurt 0–2% + <span class="q" data-base="100" data-unit="g">100g</span> strawberries</li>
         <li class="wife-only">Side: <span class="q" data-base="100" data-unit="g">100g</span> fresh mozzarella + tomato + <span class="q" data-base="100" data-unit="g">100g</span> strawberries</li>
       </ul>
@@ -212,11 +212,11 @@
       <span class="kc">~450 kcal · 50g P</span>
       <ul class="kaan-only">
         <li><span class="q" data-base="250" data-unit="g">250g</span> Greek yogurt 0–2% + <span class="q" data-base="1" data-unit="">1</span> scoop protein</li>
-        <li><span class="q" data-base="1" data-unit="">1</span> banana <i>or</i> <span class="q" data-base="100" data-unit="g">100g</span> berries · optional <span class="q" data-base="30" data-unit="g">30g</span> oats</li>
+        <li><span class="q" data-base="1" data-unit="">1</span> banana <i>or</i> <span class="q" data-base="100" data-unit="g">100g</span> berries · optional <span class="q" data-dial="1" data-base="30" data-unit="g">30g</span> oats</li>
       </ul>
       <ul class="wife-only">
         <li><span class="q" data-base="1" data-unit="">1</span> scoop protein blended with water (no milk)</li>
-        <li><span class="q" data-base="1" data-unit="">1</span> banana + <span class="q" data-base="100" data-unit="g">100g</span> berries + ice · optional <span class="q" data-base="30" data-unit="g">30g</span> oats</li>
+        <li><span class="q" data-base="1" data-unit="">1</span> banana + <span class="q" data-base="100" data-unit="g">100g</span> berries + ice · optional <span class="q" data-dial="1" data-base="30" data-unit="g">30g</span> oats</li>
       </ul>
     </div>
   </section>
@@ -228,8 +228,8 @@
       <span class="kc">~800 kcal · 48g P</span>
       <ul>
         <li><span class="q" data-base="200" data-unit="g">200g</span> boneless skinless thigh, fresh in pan</li>
-        <li><span class="q" data-base="60" data-unit="g">60g</span> dry baldo rice <b>(measured — calorie dial)</b></li>
-        <li><span class="q" data-base="300" data-unit="g">300g</span> broccoli/carrot/zucchini · <span class="q" data-base="1" data-unit=" tbsp">1 tbsp</span> oil total</li>
+        <li><span class="q" data-dial="1" data-base="60" data-unit="g">60g</span> dry baldo rice <b>(measured — calorie dial)</b></li>
+        <li><span class="q" data-base="300" data-unit="g">300g</span> broccoli/carrot/zucchini · <span class="q" data-dial="1" data-base="1" data-unit=" tbsp">1 tbsp</span> oil total</li>
       </ul>
       <div class="swap kaan-only">Sauce: prepped garlic-yogurt or tomato</div>
       <div class="swap wife-only">Sauce: <b>tomato or olive-oil-garlic</b> (no yogurt)</div>
@@ -240,7 +240,7 @@
       <ul>
         <li><span class="q" data-base="200" data-unit="g">200g</span> shrimp (4 min, no pre-cook)</li>
         <li><span class="q" data-base="400" data-unit="g">400g</span> stir-fry veg — peppers/broccoli/snap peas/onion</li>
-        <li><span class="q" data-base="1" data-unit=" tbsp">1 tbsp</span> oil · soy-garlic-ginger sauce · <span class="q" data-base="60" data-unit="g">60g</span> rice optional</li>
+        <li><span class="q" data-dial="1" data-base="1" data-unit=" tbsp">1 tbsp</span> oil · soy-garlic-ginger sauce · <span class="q" data-dial="1" data-base="60" data-unit="g">60g</span> rice optional</li>
       </ul>
     </div>
     <div class="card meal">
@@ -248,7 +248,7 @@
       <span class="kc">~560 kcal · 38g P/portion</span>
       <ul>
         <li>Batch (5 portions): <span class="q" data-base="500" data-unit="g">500g</span> 5% beef/turkey + 2 onion + 4 carrot + <span class="q" data-base="300" data-unit="g">300g</span> mushroom + 2 cans crushed tomato</li>
-        <li><span class="q" data-base="75" data-unit="g">75g</span> dry pasta per serve</li>
+        <li><span class="q" data-dial="1" data-base="75" data-unit="g">75g</span> dry pasta per serve</li>
       </ul>
       <div class="swap wife-only">Top with a little <b>fresh mozzarella</b> instead of parmesan.</div>
     </div>
@@ -333,6 +333,21 @@
 
   /* ---- person ---- */
   const who = document.getElementById("who"), sub = document.getElementById("sub");
+  /* ---- quantity scaling (family servings × calorie-fit) ---- */
+  const BASE_KCAL = 2200;                 // ponytail: day the recipes were drawn for; dials scale off this
+  const qs = [...document.querySelectorAll(".q")];
+  let servMult = parseFloat(localStorage.getItem("fuel-serv")) || 1, calFactor = 1;
+  function fmtNum(v){ return (Math.round(v*10)/10).toString().replace(/\.0$/,""); }
+  function paintQ(){
+    qs.forEach(s=>{
+      const base = parseFloat(s.dataset.base), unit = s.dataset.unit;
+      let v = base*servMult;
+      if(s.dataset.dial) v *= calFactor;          // rice/pasta/oats/oil track the eater's calories
+      if(unit==="g"||unit==="ml") v = Math.round(v/5)*5;
+      s.textContent = fmtNum(Math.max(unit==="g"?5:0, v)) + unit;
+    });
+  }
+
   const slider = document.getElementById("sev");
   const actPrev = document.getElementById("actPrev"), actNext = document.getElementById("actNext");
   let person = "kaan", actIdx = 1;
@@ -361,6 +376,8 @@
     document.getElementById("t-note").innerHTML = d.note.replace("__MAINT__",maint).replace("__ACT__",act.name.toLowerCase()).replace("__KCAL__",kcal).replace("__DEF__",def+" kcal");
     localStorage.setItem("fuel-def-"+person, def);
     localStorage.setItem("fuel-act-"+person, actIdx);
+    calFactor = kcal / BASE_KCAL;     // recipes track the day's calorie target
+    paintQ();
   }
   function setPerson(p){
     if(!PEOPLE[p]) p="kaan";
@@ -381,27 +398,20 @@
   document.querySelectorAll("#person button").forEach(b=> b.onclick = ()=> setPerson(b.dataset.p));
   setPerson(localStorage.getItem("fuel-person") || "kaan");
 
-  /* ---- portion scaling ---- */
-  const qs = [...document.querySelectorAll(".q")];
-  function fmtNum(v){ return (Math.round(v*10)/10).toString().replace(/\.0$/,""); }
-  function applyServings(mult){
-    qs.forEach(s=>{
-      const base = parseFloat(s.dataset.base), unit = s.dataset.unit;
-      let v = base*mult;
-      if(unit==="g"||unit==="ml") v = Math.round(v/5)*5;
-      s.textContent = fmtNum(v) + unit;
-    });
-    document.getElementById("multLbl").textContent = "×" + fmtNum(mult);
-    document.getElementById("servVal").textContent = fmtNum(mult);
-    document.getElementById("servS").textContent = mult===1 ? "" : "s";
-    document.querySelectorAll("#presets button").forEach(b=> b.classList.toggle("on", parseFloat(b.dataset.s)===mult));
-    localStorage.setItem("fuel-serv", mult);
+  /* ---- portion scaling (family count) ---- */
+  function setServings(m){
+    servMult = m;
+    document.getElementById("multLbl").textContent = "×" + fmtNum(m);
+    document.getElementById("servVal").textContent = fmtNum(m);
+    document.getElementById("servS").textContent = m===1 ? "" : "s";
+    document.querySelectorAll("#presets button").forEach(b=> b.classList.toggle("on", parseFloat(b.dataset.s)===m));
+    localStorage.setItem("fuel-serv", m);
+    paintQ();
   }
-  let serv = parseFloat(localStorage.getItem("fuel-serv")) || 1;
-  document.querySelectorAll("#presets button").forEach(b=> b.onclick = ()=>{ serv=parseFloat(b.dataset.s); applyServings(serv); });
-  document.getElementById("plus").onclick  = ()=>{ serv=Math.round((serv+0.5)*10)/10; applyServings(serv); };
-  document.getElementById("minus").onclick = ()=>{ serv=Math.max(0.5, Math.round((serv-0.5)*10)/10); applyServings(serv); };
-  applyServings(serv);
+  document.querySelectorAll("#presets button").forEach(b=> b.onclick = ()=> setServings(parseFloat(b.dataset.s)));
+  document.getElementById("plus").onclick  = ()=> setServings(Math.round((servMult+0.5)*10)/10);
+  document.getElementById("minus").onclick = ()=> setServings(Math.max(0.5, Math.round((servMult-0.5)*10)/10));
+  setServings(servMult);
 
   /* ---- shopping list ---- */
   const items = {
