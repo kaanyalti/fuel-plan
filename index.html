@@ -70,6 +70,16 @@
   [data-theme="dark"] .proj{color:#04130f}
   .proj .t{font-size:.74rem; font-weight:800; text-transform:uppercase; letter-spacing:.8px; opacity:.75}
   .proj .v{font-size:1.35rem; font-weight:800; margin-top:2px}
+  .sev{margin-bottom:12px}
+  .sev .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px}
+  .sev .row .lab{font-size:.78rem; font-weight:700; color:var(--acc); text-transform:uppercase; letter-spacing:.6px}
+  .sev .row .word{font-weight:800; font-size:1.1rem}
+  input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:8px; border-radius:99px; background:linear-gradient(90deg,var(--good),var(--acc2)); outline:none; margin:2px 0}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; appearance:none; width:28px; height:28px; border-radius:50%; background:var(--card); border:3px solid var(--acc); box-shadow:0 2px 6px rgba(20,30,50,.18); cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:28px; height:28px; border-radius:50%; background:var(--card); border:3px solid var(--acc); cursor:pointer}
+  .sev .ends{display:flex; justify-content:space-between; font-size:.72rem; color:var(--mut); margin-top:5px}
+  .sev .meta{font-size:.85rem; color:var(--mut); margin-top:10px; text-align:center}
+  .sev .meta b{color:var(--txt)}
   .meal h3{font-size:1.05rem; margin-bottom:4px}
   .meal .kc{font-size:.8rem; font-weight:700; color:var(--acc2); background:color-mix(in srgb,var(--acc2) 12%,transparent); padding:2px 9px; border-radius:99px; display:inline-block; margin-bottom:8px}
   .meal ul{list-style:none}
@@ -143,6 +153,12 @@
 
   <section id="targets">
     <h2><span class="dot"></span>Daily Targets</h2>
+    <div class="sev card">
+      <div class="row"><span class="lab">Weight-loss pace</span><span class="word" id="sevWord">Moderate</span></div>
+      <input type="range" id="sev" min="0" max="100" value="50">
+      <div class="ends"><span>Gentle</span><span>Aggressive</span></div>
+      <div class="meta">~<b id="sevDef">500</b> kcal/day deficit</div>
+    </div>
     <div class="stats">
       <div class="stat"><div class="n" id="t-kcal">2000</div><div class="l">kcal</div></div>
       <div class="stat"><div class="n p" id="t-p">180g</div><div class="l">Protein</div></div>
@@ -271,14 +287,12 @@
 <script>
   /* ---- people ---- */
   const PEOPLE = {
-    kaan: { who:"Kaan", sub:"Gentle cut · stay full on volume",
-      kcal:"2400", p:"180g", f:"75g", c:"250g",
-      proj:"≈ 0.5 kg / week",
-      note:"Maintenance ~2900 kcal (BMR 2128 × light activity). Eating 2400 = ~500 deficit → steady, sustainable loss. High protein + fiber + water-volume food <b>kills snacking</b>. Each day = 1 breakfast + 2 mains, rotate freely. (At your size a bigger deficit is safe if you want faster — drop to ~2100 for ~0.75 kg/wk.)" },
-    wife: { who:"Eda", sub:"Gentle cut · high protein, fresh food",
-      kcal:"1500", p:"120g", f:"50g", c:"140g",
-      proj:"≈ 0.3–0.4 kg / week",
-      note:"Maintenance ~1900 kcal (BMR 1413 × light activity). Eating 1500 = ~400 deficit → steady, sustainable loss. Slow is right near a healthy BMI — protein stays high (120g) to hold muscle + stay full. Skips yogurt/milk/aged cheese — fresh mozzarella subbed in everywhere." }
+    kaan: { who:"Kaan", sub:"Cut · stay full on volume",
+      maint:2900, p:180, f:75, defMin:250, defMax:1000, defStart:500,
+      note:"Maintenance ~2900 kcal (BMR 2128 × light activity). At this pace you eat <b>__KCAL__ kcal</b> (~__DEF__/day deficit). High protein + fiber + water-volume food <b>kills snacking</b>. Day = 1 breakfast + 2 mains, rotate freely." },
+    wife: { who:"Adriana", sub:"Cut · high protein, fresh food",
+      maint:1900, p:120, f:50, defMin:150, defMax:500, defStart:400,
+      note:"Maintenance ~1900 kcal (BMR 1413 × light activity). At this pace you eat <b>__KCAL__ kcal</b> (~__DEF__/day deficit). Protein stays high (120g) to hold muscle + stay full near a healthy weight. Yogurt/milk/aged cheese swapped for fresh mozzarella everywhere." }
   };
 
   /* ---- theme ---- */
@@ -292,21 +306,40 @@
   themeBtn.onclick = ()=> setTheme(document.documentElement.getAttribute("data-theme")==="dark" ? "light" : "dark");
 
   /* ---- person ---- */
+  const who = document.getElementById("who"), sub = document.getElementById("sub");
+  const slider = document.getElementById("sev");
+  let person = "kaan";
+
+  function render(){
+    const d = PEOPLE[person], pct = +slider.value;
+    const def  = Math.round((d.defMin + (d.defMax-d.defMin)*pct/100)/25)*25;
+    const kcal = Math.round((d.maint-def)/25)*25;
+    const carbs = Math.max(0, Math.round((kcal - d.p*4 - d.f*9)/4));
+    const kg = def/1100, lb = kg*2.2046;
+    document.getElementById("t-kcal").textContent = kcal;
+    document.getElementById("t-p").textContent = d.p+"g";
+    document.getElementById("t-f").textContent = d.f+"g";
+    document.getElementById("t-c").textContent = carbs+"g";
+    document.getElementById("t-proj").textContent = "≈ "+kg.toFixed(2).replace(/0$/,"")+" kg / week ("+lb.toFixed(1)+" lb)";
+    document.getElementById("sevWord").textContent = pct<33?"Gentle":pct<67?"Moderate":"Aggressive";
+    document.getElementById("sevDef").textContent = def+" kcal";
+    document.getElementById("t-note").innerHTML = d.note.replace("__KCAL__",kcal).replace("__DEF__",def+" kcal");
+    localStorage.setItem("fuel-def-"+person, def);
+  }
   function setPerson(p){
     if(!PEOPLE[p]) p="kaan";
+    person = p;
     document.body.setAttribute("data-person", p);
     const d = PEOPLE[p];
     who.textContent = d.who; sub.textContent = d.sub;
-    document.getElementById("t-kcal").textContent = d.kcal;
-    document.getElementById("t-p").textContent = d.p;
-    document.getElementById("t-f").textContent = d.f;
-    document.getElementById("t-c").textContent = d.c;
-    document.getElementById("t-proj").textContent = d.proj;
-    document.getElementById("t-note").innerHTML = d.note;
     document.querySelectorAll("#person button").forEach(b=> b.classList.toggle("on", b.dataset.p===p));
+    const saved = parseFloat(localStorage.getItem("fuel-def-"+p));
+    const def = (saved>=d.defMin && saved<=d.defMax) ? saved : d.defStart;
+    slider.value = Math.round((def-d.defMin)/(d.defMax-d.defMin)*100);
     localStorage.setItem("fuel-person", p);
+    render();
   }
-  const who = document.getElementById("who"), sub = document.getElementById("sub");
+  slider.addEventListener("input", render);
   document.querySelectorAll("#person button").forEach(b=> b.onclick = ()=> setPerson(b.dataset.p));
   setPerson(localStorage.getItem("fuel-person") || "kaan");
 
@@ -334,7 +367,7 @@
 
   /* ---- shopping list ---- */
   const items = {
-    "Protein": ["Eggs ×2 dozen","Greek yogurt 0–2% (Kaan)","Fresh mozzarella (Eda)","Protein powder","Chicken thigh (boneless skinless) ~1kg","Shrimp ~600g","Lean mince 5% (beef/turkey) 500g"],
+    "Protein": ["Eggs ×2 dozen","Greek yogurt 0–2% (Kaan)","Fresh mozzarella (Adriana)","Protein powder","Chicken thigh (boneless skinless) ~1kg","Shrimp ~600g","Lean mince 5% (beef/turkey) 500g"],
     "Carbs": ["Baldo rice","Pasta","Oats (small bag)"],
     "Veg": ["Broccoli","Zucchini","Carrots","Peppers","Onions","Mushrooms","Spinach","Tomatoes","Stir-fry mix / snap peas"],
     "Fruit": ["Watermelon","Bananas","Strawberries","Blackberries"],
